@@ -10,9 +10,9 @@ router.get("/viewUsers/:companyName",verify,authControllers.viewUsers)
 router.get("/getUser/:companyName/:userId",verify,authControllers.getUser);
 router.put("/updateUser/:companyName/:userId",verify,authControllers.updateUser)
 router.delete("/deleteUser/:companyName/:userId",verify,authControllers.deleteUser)
-router.delete("/deleteCompany/:companyName",verify,authControllers.deleteCompany);
+// router.delete("/deleteCompany/:companyName",verify,authControllers.deleteCompany);
 
-router.get("/searchUser/:companyName/:searchedText",authControllers.searchUser)
+router.get("/searchUser/:companyName/:searchedText",verify,authControllers.searchUser)
 
 module.exports=router;
 
