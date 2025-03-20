@@ -94,7 +94,7 @@ const viewPurchaseRecord = async (req, res, next) => {
   try {
     const purchaseRecordListQuery = `
       SELECT * FROM \`${companyName}_purchase\`
-      WHERE YEAR(purchase_date) = ? OR MONTH(purchase_date) = ? OR DAY(purchase_date)=?
+      WHERE YEAR(purchase_date) = ? AND MONTH(purchase_date) = ? AND DAY(purchase_date)=?
     `;
 
     console.log("Executing Query:", purchaseRecordListQuery);
