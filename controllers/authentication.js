@@ -301,27 +301,27 @@ const deleteUser = async (req, res, next) => {
 
 // ------------------delete company-------------------------------------------------------
 
-const deleteCompany = async (req, res, next) => {
-  const companyName = req.params.companyName;
-  const user_id = req.user.user_id;
+// const deleteCompany = async (req, res, next) => {
+//   const companyName = req.params.companyName;
+//   const user_id = req.user.user_id;
 
-  try {
-    const deleteCompanyQuery = `DROP TABLE \`${companyName}_users\` WHERE user_id=? `;
+//   try {
+//     const deleteCompanyQuery = `DROP TABLE \`${companyName}_users\` WHERE user_id=? `;
 
-    const delete_purchaseDept = `DROP TABLE \`${companyName}_purchase\`  `;
+//     const delete_purchaseDept = `DROP TABLE \`${companyName}_purchase\`  `;
 
-    const delete_salesDept = `DROP TABLE \`${companyName}_sales\`  `;
+//     const delete_salesDept = `DROP TABLE \`${companyName}_sales\`  `;
 
-    await pool.query(deleteCompanyQuery, [user_id]);
-    await pool.query(delete_purchaseDept);
-    await pool.query(delete_salesDept);
+//     await pool.query(deleteCompanyQuery, [user_id]);
+//     await pool.query(delete_purchaseDept);
+//     await pool.query(delete_salesDept);
 
-    return res.status(200).json({ message: "Company deleted successfully" });
-  } catch (err) {
-    console.log("err---", err);
-    return res.status(500).json({ message: err });
-  }
-};
+//     return res.status(200).json({ message: "Company deleted successfully" });
+//   } catch (err) {
+//     console.log("err---", err);
+//     return res.status(500).json({ message: err });
+//   }
+// };
 
 // --------------------search user--------------------------------
 
@@ -366,6 +366,6 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  deleteCompany,
+  // deleteCompany,
   searchUser,
 };
