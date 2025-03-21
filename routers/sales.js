@@ -9,6 +9,8 @@ router.post("/salesEntry/:companyName",verify,salesControllers.salesEntry);
 
 router.get("/viewSalesRecord/:companyName/:month/:year",verify,salesControllers.viewSalesRecord);
 
+router.get("/viewSalesRecord/:companyName/:month/:year/:date",verify,salesControllers.viewSalesRecord);
+
 router.get("/getUniqueSale/:companyName/:saleId",verify,salesControllers.viewUniqueSaleRecord)
 
 router.put("/updateSalesRecord/:companyName/:saleId",verify,salesControllers.updateSalesRecord);

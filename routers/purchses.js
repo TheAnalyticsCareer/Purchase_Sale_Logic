@@ -7,6 +7,8 @@ router.post("/purchaseEntry/:companyName",verify,purchaseControllers.purchaseEnt
 
 // router.get("/viewPurchaseRecord/:companyName",verify,purchaseControllers.viewPurchaseRecord);
 
+router.get("/viewPurchaseRecord/:companyName/:month/:year",verify,purchaseControllers.viewPurchaseRecord);
+
 router.get("/viewPurchaseRecord/:companyName/:month/:year/:date",verify,purchaseControllers.viewPurchaseRecord);
 
 router.get("/getUniquePurchase/:companyName/:purchaseId",verify,purchaseControllers.viewUniquePurchaseRecord);

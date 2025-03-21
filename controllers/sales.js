@@ -54,22 +54,43 @@ const salesEntry = async (req, res, next) => {
 // ---------------view sales record based on month and year----------------------------
 
 
+
+
+
 // const viewSalesRecord = async (req, res, next) => {
-//     let companyName = req.params.companyName;
-//     companyName=companyName.toLowerCase();
+//   let companyName = req.params.companyName;
+//   companyName = companyName.toLowerCase();
 
-//     try {
-//         const salesRecordListQuery = `SELECT * FROM \`${companyName}_sales\``;
-//         console.log("Executing Query:", salesRecordListQuery);
+//   let { month, year } = req.params; 
+//   const today = new Date();
 
-//         const [rows] = await pool.query(salesRecordListQuery);
-//         return res.status(200).json({ message: "Sales record fetched successfully", result: rows });
-//     } catch (err) {
-//         console.error("Error fetching sales records:", err);
-//         return res.status(500).json({ message: err.message });
-//     }
+//   // If no month & year provided, use current month & year
+//   if (month==="" || year==="") {
+//     month = today.getMonth() + 1; 
+//     year = today.getFullYear();
+//   }
+
+//   console.log("Fetching records for:", month, year);
+
+//   try {
+//     const salesRecordListQuery = `
+//       SELECT * FROM \`${companyName}_sales\`
+//       WHERE YEAR(sale_date) = ? AND MONTH(sale_date) = ?
+//     `;
+
+//     console.log("Executing Query:", salesRecordListQuery);
+
+//     const [rows] = await pool.query(salesRecordListQuery, [year, month]);
+
+//     return res.status(200).json({
+//       message: "Sale record fetched successfully",
+//       result: rows,
+//     });
+//   } catch (err) {
+//     console.error("Error fetching sale records:", err);
+//     return res.status(500).json({ message: err.message });
+//   }
 // };
-
 
 
 
@@ -77,7 +98,7 @@ const viewSalesRecord = async (req, res, next) => {
   let companyName = req.params.companyName;
   companyName = companyName.toLowerCase();
 
-  let { month, year } = req.params; 
+  let { month, year, date } = req.params; 
   const today = new Date();
 
   // If no month & year provided, use current month & year
@@ -86,17 +107,36 @@ const viewSalesRecord = async (req, res, next) => {
     year = today.getFullYear();
   }
 
-  console.log("Fetching records for:", month, year);
+  console.log("Fetching records for:", month, year, date);
 
   try {
+
+    if (!date || date.trim() === "") {
+      const salesRecordListQuery = `
+        SELECT * FROM \`${companyName}_sales\`
+        WHERE YEAR(sale_date) = ? AND MONTH(sale_date) = ? order by sale_date desc
+      `;
+      console.log("Executing Query:", salesRecordListQuery);
+      const [rows] = await pool.query(salesRecordListQuery, [year, month]);
+
+      return res.status(200).json({
+        message: "Sale record fetched successfully",
+        result: rows,
+      });
+    }
+
+
+
+
+
     const salesRecordListQuery = `
       SELECT * FROM \`${companyName}_sales\`
-      WHERE YEAR(sale_date) = ? AND MONTH(sale_date) = ?
+      WHERE YEAR(sale_date) = ? AND MONTH(sale_date)=? AND DAY(sale_date) = ? order by sale_date desc
     `;
 
     console.log("Executing Query:", salesRecordListQuery);
 
-    const [rows] = await pool.query(salesRecordListQuery, [year, month]);
+    const [rows] = await pool.query(salesRecordListQuery, [year, month, date]);
 
     return res.status(200).json({
       message: "Sale record fetched successfully",
@@ -107,6 +147,11 @@ const viewSalesRecord = async (req, res, next) => {
     return res.status(500).json({ message: err.message });
   }
 };
+
+
+
+
+
 
 
 

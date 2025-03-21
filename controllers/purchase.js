@@ -75,31 +75,88 @@ const purchaseEntry = async (req, res, next) => {
 // ----------------------data based on month date -------------------------
 
 
+// const viewPurchaseRecord = async (req, res, next) => {
+//   let companyName = req.params.companyName;
+//   companyName = companyName.toLowerCase();
+
+//   let { month, year, date } = req.params; 
+//   const today = new Date();
+
+//   // If no month & year provided, use current month & year
+//   if (month==="" || year==="" || date==="") {
+//     month = today.getMonth() + 1; 
+//     year = today.getFullYear();
+//     date=today.getDate();
+//   }
+
+//   console.log("Fetching records for:", month, year, date);
+
+//   try {
+//     const purchaseRecordListQuery = `
+//       SELECT * FROM \`${companyName}_purchase\`
+//       WHERE YEAR(purchase_date) = ? AND MONTH(purchase_date) = ? AND DAY(purchase_date)=?
+//     `;
+
+//     console.log("Executing Query:", purchaseRecordListQuery);
+
+//     const [rows] = await pool.query(purchaseRecordListQuery, [year, month, date]);
+
+//     return res.status(200).json({
+//       message: "Purchase record fetched successfully",
+//       result: rows,
+//     });
+//   } catch (err) {
+//     console.error("Error fetching purchase records:", err);
+//     return res.status(500).json({ message: err.message });
+//   }
+// };
+
+
 const viewPurchaseRecord = async (req, res, next) => {
   let companyName = req.params.companyName;
   companyName = companyName.toLowerCase();
 
-  let { month, year, date } = req.params; 
+  let { month, year, date } = req.params;
   const today = new Date();
 
   // If no month & year provided, use current month & year
-  if (month==="" || year==="" || date==="") {
-    month = today.getMonth() + 1; 
+  if (month === "" || year === "") {
+    month = today.getMonth() + 1;
     year = today.getFullYear();
-    date=today.getDate();
+    // date=today.getDate();
   }
 
   console.log("Fetching records for:", month, year, date);
 
   try {
+    
+
+    if (!date || date.trim() === "") {
+      const purchaseRecordListQuery = `
+        SELECT * FROM \`${companyName}_purchase\`
+        WHERE YEAR(purchase_date) = ? AND MONTH(purchase_date) = ? 
+      `;
+      console.log("Executing Query:", purchaseRecordListQuery);
+      const [rows] = await pool.query(purchaseRecordListQuery, [year, month]);
+
+      return res.status(200).json({
+        message: "Purchase record fetched successfully",
+        result: rows,
+      });
+    }
+
+    
+
     const purchaseRecordListQuery = `
-      SELECT * FROM \`${companyName}_purchase\`
-      WHERE YEAR(purchase_date) = ? AND MONTH(purchase_date) = ? AND DAY(purchase_date)=?
-    `;
-
+  SELECT * FROM \`${companyName}_purchase\`
+  WHERE YEAR(purchase_date) = ? AND MONTH(purchase_date) = ? AND DAY(purchase_date) = ?
+`;
     console.log("Executing Query:", purchaseRecordListQuery);
-
-    const [rows] = await pool.query(purchaseRecordListQuery, [year, month, date]);
+    const [rows] = await pool.query(purchaseRecordListQuery, [
+      year,
+      month,
+      date,
+    ]);
 
     return res.status(200).json({
       message: "Purchase record fetched successfully",
