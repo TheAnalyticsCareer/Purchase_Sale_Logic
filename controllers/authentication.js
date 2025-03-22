@@ -55,7 +55,7 @@ const createNewUser = async (req, res) => {
           companyName VARCHAR(100),
           department VARCHAR(100),
           company_Id CHAR(8),
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          created_at DATE DEFAULT (CURRENT_DATE)
         )
       `);
 
@@ -72,7 +72,7 @@ const createNewUser = async (req, res) => {
           payment_type VARCHAR(50),
           payment_condition VARCHAR(50),
           payment_date DATE,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          created_at DATE DEFAULT (CURRENT_DATE)
         )
       `);
 
@@ -89,7 +89,7 @@ const createNewUser = async (req, res) => {
           payment_type VARCHAR(50),
           payment_condition VARCHAR(50),
           payment_date DATE,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          created_at DATE DEFAULT (CURRENT_DATE)
         )
       `);
 

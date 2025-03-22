@@ -11,6 +11,8 @@ router.get("/viewSalesRecord/:companyName/:month/:year",verify,salesControllers.
 
 router.get("/viewSalesRecord/:companyName/:month/:year/:date",verify,salesControllers.viewSalesRecord);
 
+router.get("/filterSaleRecord/:companyName/:sale_type/:sale_product/:sale_person/:sale_customer/:created_at",verify,salesControllers.filterSaleRecord);
+
 router.get("/getUniqueSale/:companyName/:saleId",verify,salesControllers.viewUniqueSaleRecord)
 
 router.put("/updateSalesRecord/:companyName/:saleId",verify,salesControllers.updateSalesRecord);
