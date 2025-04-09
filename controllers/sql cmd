@@ -1,1 +1,0 @@
-mysql -h <your-endpoint> -P 3306 -u <your-username> -p
