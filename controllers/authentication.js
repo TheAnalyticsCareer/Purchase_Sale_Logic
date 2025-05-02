@@ -68,6 +68,10 @@ const createNewUser = async (req, res) => {
           sale_date DATE,
           sale_type VARCHAR(50),
           sale_product VARCHAR(100),
+          quantity INT DEFAULT 0,
+          quantityPicked INT DEFAULT 0,
+          quantityLeftOver INT DEFAULT 0,
+          status VARCHAR(50) ,
           sale_person VARCHAR(100),
           sale_customer VARCHAR(100),
           sale_amount DECIMAL(10,2),
@@ -85,6 +89,10 @@ const createNewUser = async (req, res) => {
           purchase_date DATE,
           purchase_type VARCHAR(50),
           purchase_product VARCHAR(100),
+          quantity INT DEFAULT 0,
+          quantityPicked INT DEFAULT 0,
+          quantityLeftOver INT DEFAULT 0,
+          status VARCHAR(50) ,
           purchase_person VARCHAR(100),
           purchase_supplier VARCHAR(100),
           purchase_amount DECIMAL(10,2),
@@ -184,6 +192,9 @@ const createNewUser = async (req, res) => {
   }
 };
 
+
+
+
 // ------------------------login user-----------------------
 const userLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -202,7 +213,6 @@ const userLogin = async (req, res) => {
 
     const [rows] = await pool.query(checkUserQuery, [email]);
 
-
     if (rows.length === 0) {
       return res.status(400).json({ message: "User not found." });
     }
@@ -216,13 +226,14 @@ const userLogin = async (req, res) => {
 
     const token = jwt.sign({ id: user.user_id }, process.env.SecretKey);
 
-// ----------------updating user to online----------------
-    await pool.query(userOnline,[user.user_id]);
 
+
+    
+
+    // ----------------updating user to online----------------
+    await pool.query(userOnline, [user.user_id]);
 
     delete user.password;
-
-
 
     return res.status(200).json({
       message: "User Logged in!",
@@ -235,35 +246,30 @@ const userLogin = async (req, res) => {
   }
 };
 
-
-
 // -------------user log out----------------------
 
-
-const userLogout=async(req,res,next)=>{
-const {userId}=req.params
-let {companyName}=req.params
-companyName = companyName.toLowerCase();
+const userLogout = async (req, res, next) => {
+  const { userId } = req.params;
+  let { companyName } = req.params;
+  companyName = companyName.toLowerCase();
 
   try {
     // Update user status in database
-    await pool.query(`
+    await pool.query(
+      `
       UPDATE \`${companyName}_users\` 
       SET userStatus = 'offline',
           lastOnline = NOW()
       WHERE user_id = ?`,
       [userId]
     );
-    
 
-    res.status(200).json({ message: 'Logged out successfully' });
+    res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.error('Logout error:', error);
-    res.status(500).json({ error: 'Logout failed' });
+    console.error("Logout error:", error);
+    res.status(500).json({ error: "Logout failed" });
   }
-}
-
-
+};
 
 // --------------------view users------------------------------
 const viewUsers = async (req, res) => {

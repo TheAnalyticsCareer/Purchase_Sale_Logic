@@ -8,6 +8,10 @@ const purchaseEntry = async (req, res, next) => {
     purchase_date,
     purchase_type,
     purchase_product,
+    quantity,
+    quantityPicked,
+    quantityLeftOver,
+    status,
     purchase_person,
     purchase_supplier,
     purchase_amount,
@@ -25,14 +29,20 @@ const purchaseEntry = async (req, res, next) => {
   try {
     const purchase_id = uuidv4();
     const insertpurchaseEntry = `INSERT INTO \`${companyName}_purchase\`
-        (purchase_id,purchase_date,purchase_type,purchase_product,purchase_person,purchase_supplier,purchase_amount,purchase_commission,payment_type,payment_condition,payment_date) 
-    VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
+        (purchase_id,purchase_date,purchase_type,purchase_product, quantity,
+    quantityPicked,
+    quantityLeftOver,status,purchase_person,purchase_supplier,purchase_amount,purchase_commission,payment_type,payment_condition,payment_date) 
+    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
     await pool.query(insertpurchaseEntry, [
       purchase_id,
       purchase_date,
       purchase_type,
       purchase_product,
+      quantity,
+      quantityPicked,
+      quantityLeftOver,
+      status,
       purchase_person,
       purchase_supplier,
       purchase_amount,
@@ -212,6 +222,10 @@ const updatePurchaseRecord = async (req, res, next) => {
     purchase_date,
     purchase_type,
     purchase_product,
+    quantity,
+    quantityPicked,
+    quantityLeftOver,
+    status,
     purchase_person,
     purchase_supplier,
     purchase_amount,
@@ -227,12 +241,18 @@ const updatePurchaseRecord = async (req, res, next) => {
   companyName = companyName.toLowerCase();
 
   try {
-    const updatePurchaseRecordQuery = `UPDATE \`${companyName}_purchase\` SET purchase_date=?,purchase_type=?,purchase_product=?,purchase_person=?,purchase_supplier=?,purchase_amount=?,purchase_commission=?,payment_type=?,payment_condition=?,payment_date=? WHERE purchase_id =?`;
+    const updatePurchaseRecordQuery = `UPDATE \`${companyName}_purchase\` SET purchase_date=?,purchase_type=?,purchase_product=?,quantity=?,
+    quantityPicked=?,
+    quantityLeftOver=?,status=?,purchase_person=?,purchase_supplier=?,purchase_amount=?,purchase_commission=?,payment_type=?,payment_condition=?,payment_date=? WHERE purchase_id =?`;
 
     await pool.query(updatePurchaseRecordQuery, [
       purchase_date,
       purchase_type,
       purchase_product,
+      quantity,
+      quantityPicked,
+      quantityLeftOver,
+      status,
       purchase_person,
       purchase_supplier,
       purchase_amount,
@@ -247,6 +267,10 @@ const updatePurchaseRecord = async (req, res, next) => {
       purchase_date,
       purchase_type,
       purchase_product,
+      quantity,
+      quantityPicked,
+      quantityLeftOver,
+      status,
       purchase_person,
       purchase_supplier,
       purchase_amount,

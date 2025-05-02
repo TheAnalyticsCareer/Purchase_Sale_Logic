@@ -4,10 +4,46 @@ const { v4: uuidv4 } = require("uuid");
 // -----------Sales Entry----------------------
 
 const salesEntry = async (req, res, next) => {
-    const {
+  const {
+    sale_date,
+    sale_type,
+    sale_product,
+    quantity,
+    quantityPicked,
+    quantityLeftOver,
+    status,
+    sale_person,
+    sale_customer,
+    sale_amount,
+    sale_commission,
+    payment_type,
+    payment_condition,
+    payment_date,
+  } = req.body;
+
+  let companyName = req.params.companyName;
+  companyName = companyName.toLowerCase();
+
+  console.log("companyName---", companyName);
+
+  try {
+    const sale_id = uuidv4();
+    const insertSaleEntry = `INSERT INTO \`${companyName}_sales\`
+          (sale_id,sale_date,sale_type,sale_product,quantity,
+    quantityPicked,
+    quantityLeftOver,status,sale_person,sale_customer,sale_amount,sale_commission,payment_type,payment_condition,payment_date) 
+      VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+
+
+    await pool.query(insertSaleEntry, [
+      sale_id,
       sale_date,
       sale_type,
       sale_product,
+      quantity,
+      quantityPicked,
+      quantityLeftOver,
+      status,
       sale_person,
       sale_customer,
       sale_amount,
@@ -15,40 +51,13 @@ const salesEntry = async (req, res, next) => {
       payment_type,
       payment_condition,
       payment_date,
-    } = req.body;
-  
-    let companyName = req.params.companyName;
-    companyName = companyName.toLowerCase();
-  
-    console.log("companyName---", companyName);
-  
-    try {
-      const sale_id = uuidv4();
-      const insertSaleEntry = `INSERT INTO \`${companyName}_sales\`
-          (sale_id,sale_date,sale_type,sale_product,sale_person,sale_customer,sale_amount,sale_commission,payment_type,payment_condition,payment_date) 
-      VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
-  
-      await pool.query(insertSaleEntry, [
-        sale_id,
-        sale_date,
-        sale_type,
-        sale_product,
-        sale_person,
-        sale_customer,
-        sale_amount,
-        sale_commission,
-        payment_type,
-        payment_condition,
-        payment_date,
-      ]);
-  
-      return res
-        .status(200)
-        .json({ message: "Sale Entry added successfully" });
-    } catch (err) {
-      return res.status(500).json({ message: err });
-    }
-  };
+    ]);
+
+    return res.status(200).json({ message: "Sale Entry added successfully" });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
+};
   
 
 // ---------------view sales record based on month and year----------------------------
@@ -206,30 +215,77 @@ const viewUniqueSaleRecord = async (req, res, next) => {
 
 // -------------update sales record-----------------------
 
-const updateSalesRecord=async(req,res,next)=>{
+const updateSalesRecord = async (req, res, next) => {
+  const {
+    sale_date,
+    sale_type,
+    sale_product,
+    quantity,
+    quantityPicked,
+    quantityLeftOver,
+    status,
+    sale_person,
+    sale_customer,
+    sale_amount,
+    sale_commission,
+    payment_type,
+    payment_condition,
+    payment_date,
+  } = req.body;
 
-    const {sale_date,sale_type,sale_product,sale_person,sale_customer,sale_amount,sale_commission,payment_type,payment_condition,payment_date}=req.body;
+  const saleId = req.params.saleId;
 
-    const saleId=req.params.saleId;
+  let companyName = req.params.companyName;
+  companyName = companyName.toLowerCase();
 
-    let companyName=req.params.companyName;
-    companyName=companyName.toLowerCase();
+  try {
+    const updateSalesRecordQuery = `UPDATE \`${companyName}_sales\` SET sale_date=?,sale_type=?,sale_product=?,quantity=?,
+    quantityPicked=?,
+    quantityLeftOver=?,status=?,sale_person=?,sale_customer=?,sale_amount=?,sale_commission=?,payment_type=?,payment_condition=?,payment_date=? WHERE sale_id =?`;
 
-    try{
-        const updateSalesRecordQuery=`UPDATE \`${companyName}_sales\` SET sale_date=?,sale_type=?,sale_product=?,sale_person=?,sale_customer=?,sale_amount=?,sale_commission=?,payment_type=?,payment_condition=?,payment_date=? WHERE sale_id =?`;
+    await pool.query(updateSalesRecordQuery, [
+      sale_date,
+      sale_type,
+      sale_product,
+      quantity,
+      quantityPicked,
+      quantityLeftOver,
+      status,
+      sale_person,
+      sale_customer,
+      sale_amount,
+      sale_commission,
+      payment_type,
+      payment_condition,
+      payment_date,
+      saleId,
+    ]);
 
-        await pool.query(updateSalesRecordQuery,[sale_date,sale_type,sale_product,sale_person,sale_customer,sale_amount,sale_commission,payment_type,payment_condition,payment_date,saleId])
+    const updatedSales = {
+      sale_date,
+      sale_type,
+      sale_product,
+      quantity,
+      quantityPicked,
+      quantityLeftOver,
+      status,
+      sale_person,
+      sale_customer,
+      sale_amount,
+      sale_commission,
+      payment_type,
+      payment_condition,
+      payment_date,
+    };
 
-        const updatedSales={
-            sale_date,sale_type,sale_product,sale_person,sale_customer,sale_amount,sale_commission,payment_type,payment_condition,payment_date
-        }
-
-        return res.status(200).json({message:"Sales record updated successfully",result:updatedSales})
-    }catch(err){
-        return res.status(500).json({message:err})
-    }
-
-}
+    return res.status(200).json({
+      message: "Sales record updated successfully",
+      result: updatedSales,
+    });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
+};
 
 
 
